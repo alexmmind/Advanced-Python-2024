@@ -12,6 +12,8 @@ from config_reader import config
 from aiogram import Router, F
 from modules.keyboards import make_inline_kbrd, start_bot_kbrd, date_kbrd
 from aiogram.fsm.context import FSMContext
+from Data.data_pipeline import *
+import datetime
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
@@ -124,6 +126,7 @@ async def litrageSave(message: Message, state: FSMContext):
 @router.callback_query(F.data == "save_parts")
 async def save_oil(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
+    await state.update_data(name=callback.from_user.username)
     user_data = await state.get_data()
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(
@@ -133,7 +136,20 @@ async def save_oil(callback: types.CallbackQuery, state: FSMContext):
 
     ###
     #...
-    #Работа с БД
+    now = datetime.datetime.now(datetime.timezone.utc)
+    date = now.date()
+    features_type = ['VARCHAR(40) PRIMARY KEY', #id
+                     'VARCHAR(200)', #name
+                     'VARCHAR(50)', #date
+                     'VARCHAR(20)', #tags
+                     'VARCHAR(1500)'] #text
+    
+    data = ({"id": str(now.timestamp()), 
+             "name": user_data["name"], 
+             "date": str(date), 
+             "tag": 'parts',
+             "text": user_data["text"]})
+    await save_data(data, features_type)
     #...
     ###
     

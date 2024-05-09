@@ -1,6 +1,8 @@
 from aiogram import Bot, types
 from aiogram import F
 from aiogram.types import Message
+import datetime
+from datetime import timezone
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import sys
 sys.path.append("C:/Telegram Car Bot/")
@@ -8,7 +10,7 @@ from aiogram.fsm.state import State, StatesGroup
 from config_reader import config
 from aiogram import Router, F
 from modules.keyboards import make_inline_kbrd, start_bot_kbrd, oil_type_kbrd
-
+from Data.data_pipeline import *
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
@@ -274,9 +276,13 @@ async def litrageSave(message: Message, state: FSMContext):
         text=f'''Вы ввели:\n{user_data['type']}\nПробег: {user_data['mileage']} км\nОбъем: {user_data['litrage']} л\nБренд: {user_data['brand']}\nЦена: {user_data['price']} руб.''', reply_markup=builder.as_markup()
     )
 
+
 @router.callback_query(F.data == "save_oil")
 async def save_oil(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
+    await state.update_data(name=callback.from_user.username)
+    # await state.update_data(id=callback.message.message_id)
+    await state.update_data(name=callback.from_user.username)
     user_data = await state.get_data()
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(
@@ -287,6 +293,30 @@ async def save_oil(callback: types.CallbackQuery, state: FSMContext):
     ###
     #...
     #Работа с БД
+    # await save_oil(user_data, state)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    # и просто дату
+    date = now.date()
+    features_type = ['VARCHAR(40) PRIMARY KEY', #id
+                     'VARCHAR(200)', #name
+                     'VARCHAR(20)',  #date
+                     'VARCHAR(20)',  #tags
+                     'VARCHAR(500)', #type
+                     'VARCHAR(500)', #mileage
+                     'VARCHAR(500)', #litrage
+                     'VARCHAR(1500)', #brand
+                     'VARCHAR(500)'] #price
+    
+    data = ({"id": str(now.timestamp()), 
+             "name": user_data["name"], 
+             "date": str(date), 
+             "tag": 'oil',
+             "type": user_data["type"], 
+             "mileage": user_data["mileage"], 
+             "litrage": user_data["litrage"], 
+             "brand": user_data["brand"], 
+             "price": user_data["price"]})
+    await save_data(data, features_type)
     #...
     ###
     

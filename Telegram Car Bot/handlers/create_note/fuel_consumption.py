@@ -8,7 +8,7 @@ from aiogram.fsm.state import State, StatesGroup
 from config_reader import config
 from aiogram import Router, F
 from modules.keyboards import make_inline_kbrd, start_bot_kbrd
-
+from Data.data_pipeline import *
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
@@ -57,7 +57,7 @@ async def kmSave(message: Message, state: FSMContext):
     )
     builder.adjust(2)
 
-    await state.update_data(km=float(message.text.lower().replace(",", ".")))
+    await state.update_data(mileage=float(message.text.lower().replace(",", ".")))
     # await callback.message.delete()
     await message.answer(
         text="Спасибо. Теперь, пожалуйста, введите объем топлива:", reply_markup=builder.as_markup()
@@ -86,17 +86,19 @@ async def litrageSave(message: Message, state: FSMContext):
     )
     builder.adjust(2)
 
-    await state.update_data(liters=float(message.text.lower().replace(",", ".")))
+    await state.update_data(litrage=float(message.text.lower().replace(",", ".")))
     user_data = await state.get_data()
-    await state.update_data(consumption=round(user_data['liters']/user_data['km']*100, 2))
+    await state.update_data(consumption=round(user_data['litrage']/user_data['mileage']*100, 2))
     user_data = await state.get_data()
     await message.answer(
         text=f"Ваш расход составил: {user_data['consumption']} л/100км", reply_markup=builder.as_markup()
     )
 
+import datetime
 @router.callback_query(F.data == "save_fuel")
 async def save_fuel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
+    await state.update_data(name=callback.from_user.username)
     user_data = await state.get_data()
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(
@@ -106,7 +108,24 @@ async def save_fuel(callback: types.CallbackQuery, state: FSMContext):
 
     ###
     #...
-    #Работа с БД
+    now = datetime.datetime.now(datetime.timezone.utc)
+    date = now.date()
+    features_type = ['VARCHAR(40) PRIMARY KEY', #id
+                     'VARCHAR(200)', #name
+                     'VARCHAR(20)', #date
+                     'VARCHAR(20)', #tag
+                     'VARCHAR(500)', #consumption
+                     'VARCHAR(500)', #litrage
+                     'VARCHAR(500)'] #mileage
+    
+    data = ({"id": str(now.timestamp()), 
+             "name": user_data["name"], 
+             "date": str(date), 
+             "tag": 'fuel',
+             "consumption": user_data["consumption"], 
+             "litrage": user_data["litrage"], 
+             "mileage": user_data["mileage"]})
+    await save_data(data, features_type)
     #...
     ###
     
