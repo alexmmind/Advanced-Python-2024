@@ -14,14 +14,26 @@ notes_type_kbdr = [("Заправка/расход \U000026FD", "fuel"),
                     ("Другая заметка \U0001F4DD", "other_note"),
                     ("На главную \U0001F3E0", "start_bot")]
 
-find_type_kbrd = [("По тегу \U00000023", "find_by_tag"),
+find_type_kbrd = [("По теме \U00000023", "find_by_tag"),
                   ("По дате \U0001F4C5","find_by_date"),
-                  ("По тегу и дате \U0001F50E", "find_by_tag_and_date"),
+                  ("По теме и дате \U0001F50E", "find_by_tag_and_date"),
                   ("На главную \U0001F3E0", "start_bot")]
 
-view_type_kbrd = [("По тегу \U00000023", "view_by_tag"),
+find_tag_kbdr = [("Заправка/расход \U000026FD", "fuel_find"),
+                    ("Масло \U0001F6E2", "oil_find"),
+                    ("Покупка запчастей \U00002699", "parts_find"),
+                    ("Другая заметка \U0001F4DD", "other_note_find"),
+                    ("На главную \U0001F3E0", "start_bot")]
+
+find_tag_kbdr_ = [("Заправка/расход \U000026FD", "fuel_find_"),
+                    ("Масло \U0001F6E2", "oil_find_"),
+                    ("Покупка запчастей \U00002699", "parts_find_"),
+                    ("Другая заметка \U0001F4DD", "other_note_find_"),
+                    ("На главную \U0001F3E0", "start_bot_")]
+
+view_type_kbrd = [("По теме \U00000023", "view_by_tag"),
                   ("По дате \U0001F4C5", "view_by_date"),
-                  ("По тегу и дате \U0001F50E", "view_by_tag_and_date"),
+                  ("По теме и дате \U0001F50E", "view_by_tag_and_date"),
                   ("На главную \U0001F3E0", "start_bot")]
 
 oil_type_kbrd = [("Замена масла \U0001F504", "oil_change"),
