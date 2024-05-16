@@ -3,10 +3,17 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 start_bot_kbrd = [("Создать запись \U0001F4DD", 'create_note'), 
                     ("Найти запись \U0001F50E", 'find_note'), 
-                    ("Посмотреть статистику \U0001F4CA", 'view_statistics'),
-                    ("Добавить напоминание \U0001F4C6", 'reminder'),
-                    ("На главную \U0001F3E0", 'start_bot'),
-                    ("Помощь \U0001F91D", 'help')]
+                    ("Статистика \U0001F4CA", 'view_statistics'),
+                    # ("Добавить напоминание \U0001F4C6", 'reminder'),
+                    ("Помощь \U0001F91D", 'help')]#,
+                    # ("На главную \U0001F3E0", 'start_bot')]
+
+help_bot_kbrd = [("Создать запись \U0001F4DD", 'create_note'), 
+                    ("Найти запись \U0001F50E", 'find_note'), 
+                    ("Статистика \U0001F4CA", 'view_statistics'),
+                    # ("Добавить напоминание \U0001F4C6", 'reminder'),
+                    ("Помощь \U0001F91D", 'help'),
+                    ("На главную \U0001F3E0", 'start_bot')]
 
 notes_type_kbdr = [("Заправка/расход \U000026FD", "fuel"),
                     ("Масло \U0001F6E2", "oil"),
@@ -35,6 +42,14 @@ view_type_kbrd = [("По теме \U00000023", "view_by_tag"),
                   ("По дате \U0001F4C5", "view_by_date"),
                   ("По теме и дате \U0001F50E", "view_by_tag_and_date"),
                   ("На главную \U0001F3E0", "start_bot")]
+
+view_tag_kbdr_ = [("Заправка/расход \U000026FD", "fuel_view_"),
+                    ("Масло \U0001F6E2", "oil_view_"),
+                    ("На главную \U0001F3E0", "start_bot_")]
+                    # ("Покупка запчастей \U00002699", "parts_view_"),
+                    # ("Другая заметка \U0001F4DD", "other_note_view_"),
+                    
+
 
 oil_type_kbrd = [("Замена масла \U0001F504", "oil_change"),
                   ("Доливка масла \U00002935", "oil_refill"),

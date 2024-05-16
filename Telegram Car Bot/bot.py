@@ -1,18 +1,13 @@
-##################################################################
-# Предыдущая версия бота без вырезанного кода находится в /trash/bot_rezerv.py
-##################################################################
-
 import sys
-
 from handlers.find_note import find_note
+from handlers.view_statistics import view_statistics
 sys.path.append('C:\Telegram Car Bot\modules')
 import asyncio
 import logging
 from config_reader import config
 from aiogram import Bot, Dispatcher
-from handlers import help, start, start_bot, view_statistics, reminder
+from handlers import help, start, start_bot, reminder
 from handlers.create_note import create_note
-
 
 async def main():
     logging.basicConfig(level=logging.INFO)
