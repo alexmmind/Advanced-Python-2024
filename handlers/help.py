@@ -2,8 +2,10 @@ from aiogram import types
 import sqlite3 as sl
 from aiogram import Router, F
 import sys
-sys.path.append("C:/Telegram Car Bot/modules/")
-from keyboards import make_inline_kbrd, help_bot_kbrd
+import os
+root_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(root_directory)
+from modules.keyboards import make_inline_kbrd, help_bot_kbrd
 
 router = Router()
 @router.callback_query(F.data == "help")

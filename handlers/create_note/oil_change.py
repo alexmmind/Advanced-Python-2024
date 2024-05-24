@@ -5,12 +5,17 @@ import datetime
 from datetime import timezone
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import sys
-sys.path.append("C:/Telegram Car Bot/")
+import os
+current_dir = os.path.dirname(__file__)
+root_directory = os.path.abspath(os.path.join(current_dir, '..', '..'))
+sys.path.append(root_directory)
+from modules.config_reader import config
+from modules.keyboards import *
+from data.data_pipeline import *
 from aiogram.fsm.state import State, StatesGroup
-from config_reader import config
 from aiogram import Router, F
-from modules.keyboards import make_inline_kbrd, start_bot_kbrd, oil_type_kbrd
-from Data.data_pipeline import *
+from aiogram.filters import Command, StateFilter
+from aiogram.fsm.context import FSMContext
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
@@ -21,8 +26,7 @@ class OilChange(StatesGroup):
     price = State()
     brand = State()
     oil_type = State()
-from aiogram.filters import Command, StateFilter
-from aiogram.fsm.context import FSMContext
+
 @router.callback_query(F.data == "oil")
 async def create_note(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
@@ -31,8 +35,8 @@ async def create_note(callback: types.CallbackQuery, state: FSMContext):
         "Выберите тип заметки",
         reply_markup=make_inline_kbrd(oil_type_kbrd, 2).as_markup())
     
-#oil_change
-###############################################################################
+
+
 @router.callback_query(F.data == "oil_change")   
 async def fuel(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
@@ -51,8 +55,8 @@ async def fuel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer("Введите пробег:", reply_markup=builder.as_markup())#,
     await state.set_state(OilChange.mileage)
 
-#oil_refill
-###############################################################################
+
+
 @router.callback_query(F.data == "oil_refill")   
 async def oil_refill(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
@@ -70,6 +74,7 @@ async def oil_refill(callback: types.CallbackQuery, state: FSMContext):
     await state.update_data(type='Доливка масла')
     await callback.message.answer("Введите пробег:", reply_markup=builder.as_markup())#,
     await state.set_state(OilChange.mileage)
+
 
 
 @router.message(OilChange.mileage)
@@ -96,6 +101,8 @@ async def kmSave(message: Message, state: FSMContext):
     )
     await state.set_state(OilChange.litrage)
 
+
+
 @router.message(OilChange.litrage)
 async def litrageSave(message: Message, state: FSMContext):
     await state.update_data(litrage=message.text.lower())
@@ -121,6 +128,7 @@ async def litrageSave(message: Message, state: FSMContext):
         text=f"Укажите бренд и марку масла, по желанию\nЕсли вы хотите пропустить этот пункт, нажмите кнопку 'Пропустить'", reply_markup=builder.as_markup()
     )
     await state.set_state(OilChange.brand)
+
 
 
 @router.callback_query(F.data == "skip_brand")
@@ -183,6 +191,8 @@ async def kmSave(message: Message, state: FSMContext):
     )
     await state.set_state(OilChange.price)
 
+
+
 @router.callback_query(F.data == "skip_price")
 async def skip_price(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
@@ -229,6 +239,8 @@ async def oil_LP(callback: types.CallbackQuery, state: FSMContext):
     )
     await state.set_state(OilChange.price)
     
+
+
 @router.callback_query(F.data == "oil_full_price")
 async def oil_FP(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
@@ -247,6 +259,8 @@ async def oil_FP(callback: types.CallbackQuery, state: FSMContext):
         text=f"Укажите цену:", reply_markup=builder.as_markup()
     )
     await state.set_state(OilChange.price)
+
+
 
 @router.message(OilChange.price)
 async def litrageSave(message: Message, state: FSMContext):
@@ -275,6 +289,7 @@ async def litrageSave(message: Message, state: FSMContext):
     await message.answer(
         text=f'''Вы ввели:\n{user_data['type']}\nПробег: {user_data['mileage']} км\nОбъем: {user_data['litrage']} л\nБренд: {user_data['brand']}\nЦена: {user_data['price']} руб.''', reply_markup=builder.as_markup()
     )
+
 
 
 @router.callback_query(F.data == "save_oil")
@@ -325,6 +340,8 @@ async def save_oil(callback: types.CallbackQuery, state: FSMContext):
     )
 
     await state.clear()
+
+
 
 @router.callback_query(F.data == "start_bot_oil")
 async def start_oil(callback: types.CallbackQuery, state: FSMContext):

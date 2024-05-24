@@ -3,12 +3,15 @@ from aiogram import F
 from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import sys
-sys.path.append("C:/Telegram Car Bot/")
 from aiogram.fsm.state import State, StatesGroup
-from config_reader import config
 from aiogram import Router, F
-from modules.keyboards import make_inline_kbrd, start_bot_kbrd
-from Data.data_pipeline import *
+import os
+current_dir = os.path.dirname(__file__)
+root_directory = os.path.abspath(os.path.join(current_dir, '..', '..'))
+sys.path.append(root_directory)
+from modules.config_reader import config
+from modules.keyboards import *
+from data.data_pipeline import *
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 

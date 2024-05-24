@@ -6,13 +6,16 @@ import sys
 import datetime
 sys.path.append("C:/Telegram Car Bot/")
 from aiogram.fsm.state import State, StatesGroup
-from config_reader import config
 from aiogram import Router, F
-from modules.keyboards import make_inline_kbrd, start_bot_kbrd, date_other_kbrd
-sys.path.append("C:/Telegram Car Bot/modules/")
-from modules.datetime_converter import convert_date_to_datetime
-from Data.data_pipeline import *
 import datetime
+import os
+current_dir = os.path.dirname(__file__)
+root_directory = os.path.abspath(os.path.join(current_dir, '..', '..'))
+sys.path.append(root_directory)
+from modules.config_reader import config
+from modules.keyboards import *
+from data.data_pipeline import *
+from modules.datetime_converter import convert_date_to_datetime
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 

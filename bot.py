@@ -1,13 +1,11 @@
-import sys
-from handlers.find_note import find_note
 from handlers.view_statistics import view_statistics
-sys.path.append('C:\Telegram Car Bot\modules')
-import asyncio
-import logging
-from config_reader import config
-from aiogram import Bot, Dispatcher
 from handlers import help, start, start_bot, reminder
 from handlers.create_note import create_note
+from handlers.find_note import find_note
+from modules.config_reader import config
+from aiogram import Bot, Dispatcher
+import asyncio
+import logging
 
 async def main():
     logging.basicConfig(level=logging.INFO)

@@ -1,11 +1,14 @@
 from aiogram import types
 import sys
-sys.path.append("C:/Telegram Car Bot/")
-sys.path.append("C:/Telegram Car Bot/handlers/")
 from aiogram import Router, F
-sys.path.append("C:/Telegram Car Bot/handlers/create_note/")
-from modules.keyboards import make_inline_kbrd, notes_type_kbdr
-import fuel_consumption, oil_change, car_parts, other_notes
+import os
+current_dir = os.path.dirname(__file__)
+root_directory = os.path.abspath(os.path.join(current_dir, '..', '..'))
+sys.path.append(root_directory)
+from modules.config_reader import config
+from modules.keyboards import *
+from data.data_pipeline import *
+from handlers.create_note import fuel_consumption, oil_change, car_parts, other_notes
 
 router = Router()
 router.include_router(fuel_consumption.router)
