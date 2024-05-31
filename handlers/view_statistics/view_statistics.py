@@ -9,6 +9,7 @@ from modules.config_reader import config
 from modules.keyboards import *
 from aiogram import Bot, types
 from handlers.view_statistics import view_by_date_and_tag, view_by_tag
+from data.data_pipeline import *
 
 router = Router()
 router.include_router(view_by_date_and_tag.router)

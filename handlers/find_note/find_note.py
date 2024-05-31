@@ -8,6 +8,7 @@ from modules.keyboards import *
 from modules.find_and_view_func import *
 from aiogram import Router, F, Bot, types
 from handlers.find_note import find_by_tag, find_by_date, find_by_date_and_tag
+from data.data_pipeline import *
 
 router = Router()
 router.include_router(find_by_tag.router)

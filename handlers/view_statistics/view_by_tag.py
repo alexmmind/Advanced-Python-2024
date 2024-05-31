@@ -8,6 +8,7 @@ from modules.find_and_view_func import *
 from modules.keyboards import *
 from aiogram import Router, F, Bot, types
 from aiogram.types import FSInputFile
+from data.data_pipeline import *
 
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
