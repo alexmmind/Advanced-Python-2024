@@ -12,12 +12,13 @@ from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
+from data.data_pipeline import *
 
 
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
-class FindNotes(StatesGroup):
+class ViewNotes(StatesGroup):
     date_A = State()
     date_B = State()
     date_tag = State()
@@ -36,9 +37,9 @@ async def fuel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(
         "Введите начальную дату поиска в формате Год-месяц-день, например 2024-01-01:",
         reply_markup=builder.as_markup())
-    await state.set_state(FindNotes.date_A)
+    await state.set_state(ViewNotes.date_A)
 
-@router.message(FindNotes.date_A)
+@router.message(ViewNotes.date_A)
 async def kmSave(message: Message, state: FSMContext):
     bot_message_id = message.message_id - 1
     await message.delete()
@@ -57,15 +58,14 @@ async def kmSave(message: Message, state: FSMContext):
     await message.answer(
         "Введите конечную дату поиска в формате Год-месяц-день, например 2025-01-01:",
         reply_markup=builder.as_markup())
-    await state.set_state(FindNotes.date_B)
+    await state.set_state(ViewNotes.date_B)
 
 
-@router.message(FindNotes.date_B)
+@router.message(ViewNotes.date_B)
 async def findDate(message: Message, state: FSMContext):
     bot_message_id = message.message_id - 1
     await state.update_data(date_B=message.text)
-    
-    # Delete both messages
+
     await message.delete()
     await bot.delete_message(message.chat.id, bot_message_id)
 
@@ -95,19 +95,6 @@ async def fuel(callback: types.CallbackQuery, state: FSMContext):
                                         caption='График вашего расхода',
                                         reply_markup=builder.as_markup())
 
-#     formatted_rows = []
-#     for index, row in ans.iterrows():
-#         formatted_rows.append(f'''Дата: {row['date']}
-# пробег: {row['mileage']} км
-# количество литров: {row['litrage']} л
-# расход: {row['consumption']} л/100км.
-# \n''')
-#     ans_ = ''.join(formatted_rows)
-#     if len(formatted_rows) == 0:
-#         ans_ = "Ничего не найдено \U0001F625 попробуйте снова."
-    
-#     await callback.message.answer(f"{ans_}", reply_markup=builder.as_markup())#,
-
 
 @router.callback_query(F.data == "oil_view")   
 async def fuel(callback: types.CallbackQuery, state: FSMContext):
@@ -126,43 +113,10 @@ async def fuel(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.answer(
             "Ничего не найдено \U0001F625 попробуйте снова.",
             reply_markup=builder.as_markup())
-    path = await plot_oil(ans, 'id', 'litrage', 'data\\file.png') 
+    path = await plot_oil(ans, 'date', 'litrage', 'data\\file.png') 
     await callback.message.answer_photo(photo=FSInputFile(path, filename='Масло'), 
                                         caption='Ваши замены и доливки масла', 
                                         reply_markup=builder.as_markup())
-
-
-
-#     formatted_rows = []
-#     for index, row in ans.iterrows():
-#         formatted_rows.append(f'''Дата: {row['date']}
-# {row['type']}
-# пробег: {row['mileage']} км
-# количество литров: {row['litrage']} л
-# Бренд: {row['brand']}
-# Цена: {row['price']} руб.
-# \n''')
-#     ans_ = ''.join(formatted_rows)
-#     if len(formatted_rows) == 0:
-#         ans_ = "Ничего не найдено \U0001F625 попробуйте снова."
-    
-#     await callback.message.answer(f"{ans_}", reply_markup=builder.as_markup())#,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

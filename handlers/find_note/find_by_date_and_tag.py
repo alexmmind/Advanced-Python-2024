@@ -12,11 +12,12 @@ from modules.keyboards import *
 from modules.find_and_view_func import *
 from modules.config_reader import config
 from aiogram.fsm.context import FSMContext
+from data.data_pipeline import *
 
 router = Router()
 bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="None")
 
-class FindNotes(StatesGroup):
+class FindNotes_(StatesGroup):
     date_A = State()
     date_B = State()
     date_tag = State()
@@ -32,9 +33,9 @@ async def fuel(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(
         "Введите начальную дату поиска в формате Год-месяц-день, например 2024-01-01:",
         reply_markup=builder.as_markup())
-    await state.set_state(FindNotes.date_A)
+    await state.set_state(FindNotes_.date_A)
 
-@router.message(FindNotes.date_A)
+@router.message(FindNotes_.date_A)
 async def kmSave(message: Message, state: FSMContext):
     bot_message_id = message.message_id - 1
     await message.delete()
@@ -53,10 +54,10 @@ async def kmSave(message: Message, state: FSMContext):
     await message.answer(
         "Введите конечную дату поиска в формате Год-месяц-день, например 2025-01-01:",
         reply_markup=builder.as_markup())
-    await state.set_state(FindNotes.date_B)
+    await state.set_state(FindNotes_.date_B)
 
 
-@router.message(FindNotes.date_B)
+@router.message(FindNotes_.date_B)
 async def findDate(message: Message, state: FSMContext):
     bot_message_id = message.message_id - 1
     await state.update_data(date_B=message.text)
@@ -68,7 +69,7 @@ async def findDate(message: Message, state: FSMContext):
         reply_markup=make_inline_kbrd(find_tag_date_kbdr, 2).as_markup())
 
 
-@router.callback_query(F.data == "fuel_find_")   
+@router.callback_query(F.data == "fuel_find_")
 async def fuel(callback: types.CallbackQuery, state: FSMContext):
     # await state.clear()
     await callback.message.delete()

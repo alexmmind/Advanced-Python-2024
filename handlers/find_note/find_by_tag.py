@@ -9,6 +9,7 @@ from modules.config_reader import config
 from modules.find_and_view_func import *
 from modules.keyboards import *
 from aiogram.fsm.context import FSMContext
+from data.data_pipeline import *
 
 router = Router()
 

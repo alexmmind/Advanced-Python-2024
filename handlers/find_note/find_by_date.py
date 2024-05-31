@@ -11,6 +11,7 @@ from modules.keyboards import *
 from modules.find_and_view_func import *
 from modules.config_reader import config
 from aiogram.fsm.context import FSMContext
+from data.data_pipeline import *
 
 
 router = Router()
